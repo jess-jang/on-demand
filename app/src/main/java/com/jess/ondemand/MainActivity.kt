@@ -38,7 +38,8 @@ private const val JAVA_SAMPLE_CLASSNAME = "$PACKAGE_NAME.java.JavaSampleActivity
 
 private const val INSTANT_PACKAGE_NAME = "$PACKAGE_NAME.instant"
 
-private const val INSTANT_SAMPLE_CLASSNAME = "$INSTANT_PACKAGE_NAME.spilt.SplitInstallInstantActivity"
+private const val INSTANT_SAMPLE_CLASSNAME =
+    "$INSTANT_PACKAGE_NAME.spilt.SplitInstallInstantActivity"
 
 private const val CONFIRMATION_REQUEST_CODE = 1
 
@@ -57,10 +58,15 @@ class MainActivity : BaseSplitActivity() {
 
         when (state.status()) {
             SplitInstallSessionStatus.DOWNLOADING -> {
+                statusText.text = "DOWNLOADING $names"
                 //  In order to see this, the application has to be uploaded to the Play Store.
                 displayLoadingState(state, getString(R.string.downloading, names))
             }
+            SplitInstallSessionStatus.DOWNLOADING -> {
+                statusText.text = "DOWNLOADED"
+            }
             SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION -> {
+                statusText.text = "REQUIRES_USER_CONFIRMATION"
                 /*
                   This may occur when attempting to download a sufficiently large module.
 
@@ -70,6 +76,7 @@ class MainActivity : BaseSplitActivity() {
                 manager.startConfirmationDialogForResult(state, this, CONFIRMATION_REQUEST_CODE)
             }
             SplitInstallSessionStatus.INSTALLED -> {
+                statusText.text = "INSTALLED"
                 if (langsInstall) {
                     onSuccessfulLanguageLoad(names)
                 } else {
@@ -77,11 +84,15 @@ class MainActivity : BaseSplitActivity() {
                 }
             }
 
-            SplitInstallSessionStatus.INSTALLING -> displayLoadingState(
-                state,
-                getString(R.string.installing, names)
-            )
+            SplitInstallSessionStatus.INSTALLING -> {
+                statusText.text = "INSTALLING"
+                displayLoadingState(
+                    state,
+                    getString(R.string.installing, names)
+                )
+            }
             SplitInstallSessionStatus.FAILED -> {
+                statusText.text = "FAILED errorCode : ${state.errorCode()} / ${state.moduleNames()}"
                 toastAndLog(
                     getString(
                         R.string.error_for_module, state.errorCode(),
@@ -109,10 +120,7 @@ class MainActivity : BaseSplitActivity() {
 
     private val moduleKotlin by lazy { getString(R.string.module_feature_kotlin) }
     private val moduleJava by lazy { getString(R.string.module_feature_java) }
-    private val moduleNative by lazy { getString(R.string.module_native) }
     private val moduleAssets by lazy { getString(R.string.module_assets) }
-    private val instantModule by lazy { getString(R.string.module_instant_feature_split_install) }
-    private val instantModuleUrl by lazy { getString(R.string.instant_feature_url) }
 
     private val clickListener by lazy {
         View.OnClickListener {
@@ -123,16 +131,18 @@ class MainActivity : BaseSplitActivity() {
                 R.id.btn_install_all_now -> installAllFeaturesNow()
                 R.id.btn_install_all_deferred -> installAllFeaturesDeferred()
                 R.id.btn_request_uninstall -> requestUninstall()
-                R.id.btn_instant_dynamic_feature_split_install -> loadAndLaunchModule(instantModule)
-                R.id.btn_instant_dynamic_feature_url_load -> openUrl(instantModuleUrl)
+                R.id.btn_request_uninstall_java -> requestUninstallJava()
             }
         }
     }
 
     private lateinit var manager: SplitInstallManager
 
+    private lateinit var statusText: TextView
+
     private lateinit var progressBar: ProgressBar
     private lateinit var progressText: TextView
+    private lateinit var progressByte: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -207,7 +217,7 @@ class MainActivity : BaseSplitActivity() {
     /** Install all features but do not launch any of them. */
     private fun installAllFeaturesNow() {
         // Request all known modules to be downloaded in a single session.
-        val moduleNames = listOf(moduleKotlin, moduleJava, moduleNative, moduleAssets)
+        val moduleNames = listOf(moduleKotlin, moduleJava, moduleAssets)
         val requestBuilder = SplitInstallRequest.newBuilder()
 
         moduleNames.forEach { name ->
@@ -227,27 +237,72 @@ class MainActivity : BaseSplitActivity() {
 
     /** Install all features deferred. */
     private fun installAllFeaturesDeferred() {
-        val modules = listOf(moduleKotlin, moduleJava, moduleAssets, moduleNative)
+        val modules = listOf(moduleKotlin, moduleJava, moduleAssets)
 
-        manager.deferredInstall(modules).addOnSuccessListener {
-            toastAndLog("Deferred installation of $modules")
-        }
+        manager.deferredInstall(modules)
+            .addOnSuccessListener {
+                toastAndLog("Deferred installation of $modules")
+            }
     }
 
     /** Request uninstall of all features. */
     private fun requestUninstall() {
 
-        toastAndLog(
-            "Requesting uninstall of all modules." +
-                    "This will happen at some point in the future."
-        )
+//        toastAndLog(
+//            "Requesting uninstall of all modules." +
+//                    "This will happen at some point in the future."
+//        )
 
         val installedModules = manager.installedModules.toList()
-        manager.deferredUninstall(installedModules).addOnSuccessListener {
-            toastAndLog("Uninstalling $installedModules")
-        }.addOnFailureListener {
-            toastAndLog("Failed installation of $installedModules")
+        manager.deferredUninstall(installedModules)
+            .addOnSuccessListener {
+                toastAndLog("Uninstalling $installedModules")
+            }.addOnFailureListener {
+                toastAndLog("Failed installation of $installedModules")
+            }
+    }
+
+    private fun requestUninstallKotlin() {
+
+//        toastAndLog(
+//            "Requesting uninstall of all modules." +
+//                    "This will happen at some point in the future."
+//        )
+
+        val installedModules = manager.installedModules.toList()
+        manager.deferredUninstall(listOf("kotlin"))
+            .addOnSuccessListener {
+                toastAndLog("Uninstalling $installedModules")
+            }.addOnFailureListener {
+                toastAndLog("Failed installation of $installedModules")
+            }
+    }
+
+    private fun requestUninstallJava() {
+        if (manager.installedModules.contains("java")) {
+            manager.deferredUninstall(listOf("java"))
+                .addOnSuccessListener {
+                    toastAndLog("Uninstalling 15mb feature")
+                }.addOnFailureListener {
+                    toastAndLog("Failed installation of 15mb feature")
+                }
         }
+    }
+
+    private fun requestUninstallAssets() {
+
+//        toastAndLog(
+//            "Requesting uninstall of all modules." +
+//                    "This will happen at some point in the future."
+//        )
+
+        val installedModules = manager.installedModules.toList()
+        manager.deferredUninstall(listOf("assets"))
+            .addOnSuccessListener {
+                toastAndLog("Uninstalling $installedModules")
+            }.addOnFailureListener {
+                toastAndLog("Failed installation of $installedModules")
+            }
     }
 
     /**
@@ -261,7 +316,6 @@ class MainActivity : BaseSplitActivity() {
                 moduleKotlin -> launchActivity(KOTLIN_SAMPLE_CLASSNAME)
                 moduleJava -> launchActivity(JAVA_SAMPLE_CLASSNAME)
                 moduleAssets -> displayAssets()
-                instantModule -> launchActivity(INSTANT_SAMPLE_CLASSNAME)
             }
         }
     }
@@ -283,14 +337,17 @@ class MainActivity : BaseSplitActivity() {
     private fun displayLoadingState(state: SplitInstallSessionState, message: String) {
         progressBar.max = state.totalBytesToDownload().toInt()
         progressBar.progress = state.bytesDownloaded().toInt()
+//        progressByte.text = "${state.bytesDownloaded().toInt()} / ${state.totalBytesToDownload()}"
 
         updateProgressMessage(message)
     }
 
     /** Set up all view variables. */
     private fun initializeViews() {
+        statusText = findViewById(R.id.status_text)
         progressBar = findViewById(R.id.progress_bar)
         progressText = findViewById(R.id.progress_text)
+        progressByte = findViewById(R.id.progress_byte)
         setupClickListener()
     }
 
@@ -302,8 +359,7 @@ class MainActivity : BaseSplitActivity() {
         setClickListener(R.id.btn_install_all_now, clickListener)
         setClickListener(R.id.btn_install_all_deferred, clickListener)
         setClickListener(R.id.btn_request_uninstall, clickListener)
-        setClickListener(R.id.btn_instant_dynamic_feature_split_install, clickListener)
-        setClickListener(R.id.btn_instant_dynamic_feature_url_load, clickListener)
+        setClickListener(R.id.btn_request_uninstall_java, clickListener)
     }
 
     private fun setClickListener(id: Int, listener: View.OnClickListener) {
