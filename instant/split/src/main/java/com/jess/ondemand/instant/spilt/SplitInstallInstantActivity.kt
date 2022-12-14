@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.android.samples.instantdynamicfeatures
+package com.jess.ondemand.instant.spilt
 
 import android.os.Bundle
-import com.google.android.samples.dynamicfeatures.BaseSplitActivity
+import com.jess.ondemand.BaseSplitActivity
 
 class SplitInstallInstantActivity : BaseSplitActivity() {
 

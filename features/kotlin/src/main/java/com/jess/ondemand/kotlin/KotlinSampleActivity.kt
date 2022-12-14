@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.android.samples.dynamicfeatures.ondemand;
+package com.jess.ondemand.kotlin
 
-import android.os.Bundle;
-import com.google.android.samples.dynamicfeatures.BaseSplitActivity;
-import com.google.android.samples.dynamicfeatures.ondemand.java.R;
+import android.os.Bundle
+import com.jess.ondemand.BaseSplitActivity
 
-import androidx.annotation.Nullable;
+/** A simple Activity displaying some text, written in Kotlin. */
+class KotlinSampleActivity : BaseSplitActivity() {
 
-/** A simple activity displaying text written in Java. */
-public class JavaSampleActivity extends BaseSplitActivity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feature_java);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_feature_kotlin)
     }
 
 }

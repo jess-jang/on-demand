@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.samples.dynamicfeatures
+package com.jess.ondemand
 
 import android.app.Application
 import android.content.Context

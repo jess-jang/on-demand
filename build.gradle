@@ -32,7 +32,7 @@ buildscript {
     ]
 
     ext.names = [
-            'applicationId': 'com.google.android.samples.dynamicfeatures.ondemand'
+            'applicationId': 'com.jess.ondemand'
     ]
 
     repositories {

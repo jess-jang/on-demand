@@ -16,7 +16,7 @@
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.android.samples.instantdynamicfeatures">
+    package="com.jess.ondemand.instant.url">
 
     <!-- The dist:instant="true" makes this module instant enabled. Assuming the "app" module is
         also instant enabled, when this bundle is uploaded to the instant track on the
@@ -31,7 +31,7 @@
 
     <application>
         <activity
-            android:name="com.android.samples.instantdynamicfeatures.UrlInstantModuleActivity"
+            android:name=".UrlInstantModuleActivity"
             android:label="@string/title_activity_url_instant_module"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.android.samples.instantdynamicfeatures
+package com.jess.ondemand.instant.url
 
 import android.os.Bundle
-import com.google.android.samples.dynamicfeatures.BaseSplitActivity
+import com.jess.ondemand.BaseSplitActivity
 
 class UrlInstantModuleActivity : BaseSplitActivity() {
 

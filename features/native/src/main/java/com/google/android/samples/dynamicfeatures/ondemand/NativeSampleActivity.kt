@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.android.samples.dynamicfeatures.ondemand
+package com.jess.ondemand
 
 import android.os.Bundle
 import android.widget.TextView
 import com.google.android.play.core.splitinstall.SplitInstallHelper
 import com.google.android.samples.dynamicfeatures.BaseSplitActivity
-import com.google.android.samples.dynamicfeatures.ondemand.ccode.R
+import com.jess.ondemand.ccode.R
 
 /** A simple activity displaying some text coming through via JNI. */
 class NativeSampleActivity : BaseSplitActivity() {

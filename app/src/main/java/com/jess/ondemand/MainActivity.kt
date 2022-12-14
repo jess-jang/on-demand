@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.samples.dynamicfeatures
+package com.jess.ondemand
 
 import android.app.Activity
 import android.content.Intent
@@ -26,25 +26,17 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.constraintlayout.widget.Group
 import com.google.android.play.core.splitcompat.SplitCompat
-import com.google.android.play.core.splitinstall.SplitInstallManager
-import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
-import com.google.android.play.core.splitinstall.SplitInstallRequest
-import com.google.android.play.core.splitinstall.SplitInstallSessionState
-import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
+import com.google.android.play.core.splitinstall.*
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
-import java.util.Locale
 
-private const val PACKAGE_NAME = "com.google.android.samples.dynamicfeatures.ondemand"
+private const val PACKAGE_NAME = "com.jess.ondemand"
 
-private const val INSTANT_PACKAGE_NAME = "com.google.android.samples.instantdynamicfeatures"
+private const val KOTLIN_SAMPLE_CLASSNAME = "$PACKAGE_NAME.kotlin.KotlinSampleActivity"
 
-private const val KOTLIN_SAMPLE_CLASSNAME = "$PACKAGE_NAME.KotlinSampleActivity"
+private const val JAVA_SAMPLE_CLASSNAME = "$PACKAGE_NAME.java.JavaSampleActivity"
 
-private const val JAVA_SAMPLE_CLASSNAME = "$PACKAGE_NAME.JavaSampleActivity"
-
-private const val NATIVE_SAMPLE_CLASSNAME = "$PACKAGE_NAME.NativeSampleActivity"
+private const val INSTANT_PACKAGE_NAME = "$PACKAGE_NAME.instant"
 
 private const val INSTANT_SAMPLE_CLASSNAME = "$INSTANT_PACKAGE_NAME.SplitInstallInstantActivity"
 
@@ -56,13 +48,12 @@ class MainActivity : BaseSplitActivity() {
     /** Listener used to handle changes in state for install requests. */
     private val listener = SplitInstallStateUpdatedListener { state ->
         val multiInstall = state.moduleNames().size > 1
-        val langsInstall = !state.languages().isEmpty()
+        val langsInstall = state.languages().isNotEmpty()
 
         val names = if (langsInstall) {
             // We always request the installation of a single language in this sample
             state.languages().first()
-        }
-        else state.moduleNames().joinToString(" - ")
+        } else state.moduleNames().joinToString(" - ")
 
         when (state.status()) {
             SplitInstallSessionStatus.DOWNLOADING -> {
@@ -79,7 +70,7 @@ class MainActivity : BaseSplitActivity() {
                 manager.startConfirmationDialogForResult(state, this, CONFIRMATION_REQUEST_CODE)
             }
             SplitInstallSessionStatus.INSTALLED -> {
-                if (langsInstall){
+                if (langsInstall) {
                     onSuccessfulLanguageLoad(names)
                 } else {
                     onSuccessfulLoad(names, launch = !multiInstall)
@@ -87,12 +78,16 @@ class MainActivity : BaseSplitActivity() {
             }
 
             SplitInstallSessionStatus.INSTALLING -> displayLoadingState(
-                    state,
-                    getString(R.string.installing, names)
+                state,
+                getString(R.string.installing, names)
             )
             SplitInstallSessionStatus.FAILED -> {
-                toastAndLog(getString(R.string.error_for_module, state.errorCode(),
-                        state.moduleNames()))
+                toastAndLog(
+                    getString(
+                        R.string.error_for_module, state.errorCode(),
+                        state.moduleNames()
+                    )
+                )
             }
         }
     }
@@ -125,22 +120,17 @@ class MainActivity : BaseSplitActivity() {
                 R.id.btn_load_kotlin -> loadAndLaunchModule(moduleKotlin)
                 R.id.btn_load_java -> loadAndLaunchModule(moduleJava)
                 R.id.btn_load_assets -> loadAndLaunchModule(moduleAssets)
-                R.id.btn_load_native -> loadAndLaunchModule(moduleNative)
                 R.id.btn_install_all_now -> installAllFeaturesNow()
                 R.id.btn_install_all_deferred -> installAllFeaturesDeferred()
                 R.id.btn_request_uninstall -> requestUninstall()
                 R.id.btn_instant_dynamic_feature_split_install -> loadAndLaunchModule(instantModule)
                 R.id.btn_instant_dynamic_feature_url_load -> openUrl(instantModuleUrl)
-                R.id.lang_en -> loadAndSwitchLanguage(LANG_EN)
-                R.id.lang_pl -> loadAndSwitchLanguage(LANG_PL)
             }
         }
     }
 
     private lateinit var manager: SplitInstallManager
 
-    private lateinit var progress: Group
-    private lateinit var buttons: Group
     private lateinit var progressBar: ProgressBar
     private lateinit var progressText: TextView
 
@@ -179,37 +169,13 @@ class MainActivity : BaseSplitActivity() {
 
         // Create request to install a feature module by name.
         val request = SplitInstallRequest.newBuilder()
-                .addModule(name)
-                .build()
+            .addModule(name)
+            .build()
 
         // Load and install the requested feature module.
         manager.startInstall(request)
 
         updateProgressMessage(getString(R.string.starting_install_for, name))
-    }
-
-    /**
-     * Load language splits by language name.
-     * @param lang The language code to load (without the region part, e.g. "en", "fr" or "pl").
-     */
-    private fun loadAndSwitchLanguage(lang: String) {
-        updateProgressMessage(getString(R.string.loading_language, lang))
-        // Skip loading if the language is already installed. Perform success action directly.
-        if (manager.installedLanguages.contains(lang)) {
-            updateProgressMessage(getString(R.string.already_installed))
-            onSuccessfulLanguageLoad(lang)
-            return
-        }
-
-        // Create request to install a language by name.
-        val request = SplitInstallRequest.newBuilder()
-                .addLanguage(Locale.forLanguageTag(lang))
-                .build()
-
-        // Load and install the requested language.
-        manager.startInstall(request)
-
-        updateProgressMessage(getString(R.string.starting_install_for, lang))
     }
 
     private fun openUrl(url: String) {
@@ -228,14 +194,14 @@ class MainActivity : BaseSplitActivity() {
         // Now treat it like any other asset file.
         val assetsStream = assetManager.open("assets.txt")
         val assetContent = assetsStream.bufferedReader()
-                .use {
-                    it.readText()
-                }
+            .use {
+                it.readText()
+            }
 
         AlertDialog.Builder(this)
-                .setTitle(getString(R.string.asset_content))
-                .setMessage(assetContent)
-                .show()
+            .setTitle(getString(R.string.asset_content))
+            .setMessage(assetContent)
+            .show()
     }
 
     /** Install all features but do not launch any of them. */
@@ -271,8 +237,10 @@ class MainActivity : BaseSplitActivity() {
     /** Request uninstall of all features. */
     private fun requestUninstall() {
 
-        toastAndLog("Requesting uninstall of all modules." +
-                "This will happen at some point in the future.")
+        toastAndLog(
+            "Requesting uninstall of all modules." +
+                    "This will happen at some point in the future."
+        )
 
         val installedModules = manager.installedModules.toList()
         manager.deferredUninstall(installedModules).addOnSuccessListener {
@@ -292,13 +260,10 @@ class MainActivity : BaseSplitActivity() {
             when (moduleName) {
                 moduleKotlin -> launchActivity(KOTLIN_SAMPLE_CLASSNAME)
                 moduleJava -> launchActivity(JAVA_SAMPLE_CLASSNAME)
-                moduleNative -> launchActivity(NATIVE_SAMPLE_CLASSNAME)
                 moduleAssets -> displayAssets()
                 instantModule -> launchActivity(INSTANT_SAMPLE_CLASSNAME)
             }
         }
-
-        displayButtons()
     }
 
     private fun onSuccessfulLanguageLoad(lang: String) {
@@ -309,15 +274,13 @@ class MainActivity : BaseSplitActivity() {
     /** Launch an activity by its class name. */
     private fun launchActivity(className: String) {
         Intent().setClassName(BuildConfig.APPLICATION_ID, className)
-                .also {
-                    startActivity(it)
-                }
+            .also {
+                startActivity(it)
+            }
     }
 
     /** Display a loading state to the user. */
     private fun displayLoadingState(state: SplitInstallSessionState, message: String) {
-        displayProgress()
-
         progressBar.max = state.totalBytesToDownload().toInt()
         progressBar.progress = state.bytesDownloaded().toInt()
 
@@ -326,8 +289,6 @@ class MainActivity : BaseSplitActivity() {
 
     /** Set up all view variables. */
     private fun initializeViews() {
-        buttons = findViewById(R.id.buttons)
-        progress = findViewById(R.id.progress)
         progressBar = findViewById(R.id.progress_bar)
         progressText = findViewById(R.id.progress_text)
         setupClickListener()
@@ -338,14 +299,11 @@ class MainActivity : BaseSplitActivity() {
         setClickListener(R.id.btn_load_kotlin, clickListener)
         setClickListener(R.id.btn_load_java, clickListener)
         setClickListener(R.id.btn_load_assets, clickListener)
-        setClickListener(R.id.btn_load_native, clickListener)
         setClickListener(R.id.btn_install_all_now, clickListener)
         setClickListener(R.id.btn_install_all_deferred, clickListener)
         setClickListener(R.id.btn_request_uninstall, clickListener)
         setClickListener(R.id.btn_instant_dynamic_feature_split_install, clickListener)
         setClickListener(R.id.btn_instant_dynamic_feature_url_load, clickListener)
-        setClickListener(R.id.lang_en, clickListener)
-        setClickListener(R.id.lang_pl, clickListener)
     }
 
     private fun setClickListener(id: Int, listener: View.OnClickListener) {
@@ -353,20 +311,7 @@ class MainActivity : BaseSplitActivity() {
     }
 
     private fun updateProgressMessage(message: String) {
-        if (progress.visibility != View.VISIBLE) displayProgress()
         progressText.text = message
-    }
-
-    /** Display progress bar and text. */
-    private fun displayProgress() {
-        progress.visibility = View.VISIBLE
-        buttons.visibility = View.GONE
-    }
-
-    /** Display buttons to accept user input. */
-    private fun displayButtons() {
-        progress.visibility = View.GONE
-        buttons.visibility = View.VISIBLE
     }
 
 }
