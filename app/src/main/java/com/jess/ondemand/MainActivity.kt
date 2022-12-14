@@ -38,7 +38,7 @@ private const val JAVA_SAMPLE_CLASSNAME = "$PACKAGE_NAME.java.JavaSampleActivity
 
 private const val INSTANT_PACKAGE_NAME = "$PACKAGE_NAME.instant"
 
-private const val INSTANT_SAMPLE_CLASSNAME = "$INSTANT_PACKAGE_NAME.SplitInstallInstantActivity"
+private const val INSTANT_SAMPLE_CLASSNAME = "$INSTANT_PACKAGE_NAME.spilt.SplitInstallInstantActivity"
 
 private const val CONFIRMATION_REQUEST_CODE = 1
 
