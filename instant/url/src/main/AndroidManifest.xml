@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2018 Google LLC.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +31,7 @@
     <application>
         <activity
             android:name=".UrlInstantModuleActivity"
+            android:exported="true"
             android:label="@string/title_activity_url_instant_module"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter
