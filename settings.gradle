@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-include ':app'
-include ':assets'
-include ':java'
-include ':kotlin'
-
-// Allows to have the four features modules shown in AS's Android view
-// without an empty "features" module.
-project(":assets").projectDir = new File(rootDir, "features/assets")
-project(":java").projectDir = new File(rootDir, "features/java")
-project(":kotlin").projectDir = new File(rootDir, "features/kotlin")
+include ':app',
+        ':features:java',
+        ':features:kotlin',
+        ':features:assets',
+//        ':features:native',
+        ':instant:split',
+        ':instant:url'

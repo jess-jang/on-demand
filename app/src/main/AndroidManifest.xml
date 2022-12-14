@@ -18,16 +18,19 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.google.android.samples.dynamicfeatures">
 
+    <!-- This line makes the "app" module instant enabled, which means this bundle can be uploaded
+        to the instant track on the Google Play Developer Console -->
+    <dist:module dist:instant="true" />
+
     <application
-        android:name="com.google.android.play.core.splitcompat.SplitCompatApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-            android:exported="true">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -36,4 +39,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

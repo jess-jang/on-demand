@@ -20,10 +20,9 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.google.android.samples.dynamicfeatures.ondemand.assets">
 
-    <dist:module dist:title="@string/module_assets">
-        <dist:delivery>
-            <dist:on-demand/>
-        </dist:delivery>
+    <dist:module
+        dist:onDemand="true"
+        dist:title="@string/module_assets">
         <dist:fusing dist:include="true" />
     </dist:module>
 
