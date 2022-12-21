@@ -16,15 +16,23 @@
 
 package com.jess.ondemand.kotlin
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.jess.ondemand.BaseSplitActivity
 
 /** A simple Activity displaying some text, written in Kotlin. */
 class KotlinSampleActivity : BaseSplitActivity() {
 
+    companion object {
+        fun newIntent(context: Context) = Intent(context, KotlinSampleActivity::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feature_kotlin)
+        Log.d("jess", System.currentTimeMillis().toString())
     }
 
 }

@@ -26,6 +26,24 @@ import java.util.Locale
 /** We have to use a custom Application class, because we want to
  * initialize the selected language before SplitCompat#install() has a chance to run. */
 class MyApplication : Application() {
+
+    companion object {
+
+        private lateinit var app: MyApplication
+
+        fun getApp(): MyApplication {
+            return app
+        }
+
+        val isAppInit: Boolean get() = ::app.isInitialized
+
+    }
+
+    override fun onCreate() {
+        app = this
+        super.onCreate()
+    }
+
     override fun attachBaseContext(base: Context) {
         LanguageHelper.init(base)
         val ctx = LanguageHelper.getLanguageConfigurationContext(base)
@@ -55,7 +73,7 @@ object LanguageHelper {
             prefs.edit().putString(PREFS_LANG, value).apply()
         }
 
-    fun init(ctx: Context){
+    fun init(ctx: Context) {
         prefs = ctx.getSharedPreferences(PREFS_LANG, Context.MODE_PRIVATE)
     }
 

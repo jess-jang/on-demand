@@ -16,8 +16,8 @@
 
 <resources>
     <string name="app_name">On Demand Sample</string>
-    <string name="load_feature_kotlin">5mb Feature Load</string>
-    <string name="load_feature_java">15mb Feature Load</string>
+    <string name="load_feature_kotlin">kotlin Feature Load</string>
+    <string name="load_feature_java">java Feature Load</string>
     <string name="load_assets">Assets Load</string>
     <string name="loading">Loading</string>
     <string name="state">state</string>
@@ -26,7 +26,7 @@
     <string name="load_all_features_deferred">모든 Feature 다운로드 (Background)</string>
     <string name="install_all_deferred">모든 Feature 다운로드 (Background)</string>
     <string name="request_uninstall">모든 Feature 삭제</string>
-    <string name="request_uninstall_java">10mb 이상 Feature 삭제</string>
+    <string name="request_uninstall_java">java Feature 삭제</string>
     <string name="instant_dynamic_feature_split_install">request instant split install</string>
     <string name="instant_dynamic_feature_url_load">request install split install via url</string>
     <string name="force_polish">Force Polish</string>

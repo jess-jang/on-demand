@@ -29,6 +29,8 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.play.core.splitcompat.SplitCompat
 import com.google.android.play.core.splitinstall.*
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
+import com.jess.ondemand.facade.kotlin.kotlinFacade
+import com.jess.ondemand.facade.kotlinFacade
 
 private const val PACKAGE_NAME = "com.jess.ondemand"
 
@@ -62,7 +64,7 @@ class MainActivity : BaseSplitActivity() {
                 //  In order to see this, the application has to be uploaded to the Play Store.
                 displayLoadingState(state, getString(R.string.downloading, names))
             }
-            SplitInstallSessionStatus.DOWNLOADING -> {
+            SplitInstallSessionStatus.DOWNLOADED -> {
                 statusText.text = "DOWNLOADED"
             }
             SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION -> {
@@ -327,10 +329,18 @@ class MainActivity : BaseSplitActivity() {
 
     /** Launch an activity by its class name. */
     private fun launchActivity(className: String) {
-        Intent().setClassName(BuildConfig.APPLICATION_ID, className)
-            .also {
-                startActivity(it)
+        when (className) {
+            KOTLIN_SAMPLE_CLASSNAME -> {
+                startActivity(kotlinFacade.kotlinFacade().getIntent(this))
             }
+            else -> {
+                Intent().setClassName(BuildConfig.APPLICATION_ID, className)
+                    .also {
+                        startActivity(it)
+                    }
+            }
+        }
+
     }
 
     /** Display a loading state to the user. */

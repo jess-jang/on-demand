@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+}
 
 android {
 
@@ -25,7 +27,7 @@ android {
         applicationId names.applicationId
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 6
+        versionCode 11
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -35,7 +37,7 @@ android {
         release {
             storeFile file("upload-keystore.jks")
             storePassword 'jess.jang'
-            keyAlias 'jess.jang'
+            keyAlias 'upload'
             keyPassword 'jess.jang'
         }
     }
@@ -45,6 +47,7 @@ android {
         debug {}
 
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
         }
     }
@@ -56,9 +59,7 @@ android {
 
     dynamicFeatures = [':features:kotlin',
                        ':features:java',
-                       ':features:assets',
-                       ':instant:split',
-                       ':instant:url']
+                       ':features:assets']
 }
 
 dependencies {
@@ -81,4 +82,6 @@ dependencies {
 
     // When using API in base, some dependencies might have to be re-added for test implementation.
     androidTestImplementation "androidx.appcompat:appcompat:${versions.appcompat}"
+
+    api "com.linecorp.lich:component:2.7.0"
 }
