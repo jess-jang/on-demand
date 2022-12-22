@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2018 Google LLC.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +15,7 @@
   -->
 
 <resources>
-    <string name="module_feature_kotlin">kotlin</string>
-    <string name="module_feature_java">java</string>
-    <string name="module_assets">assets</string>
-    <string name="module_large">large</string>
-    <string name="module_native">native</string>
-    <string name="module_instant_feature_split_install">split</string>
-    <string name="instant_feature_url">http://uabsample-405d6.firebaseapp.com/url</string>
-    <string name="title_url_instant_module">url</string>
-    <string name="title_activity_url_instant_module">url_instant_module_activity</string>
+    <string name="module_feature_kotlin">외국인신분증인식</string>
+    <string name="module_feature_java">신분증인식</string>
+    <string name="module_assets">공동인증서</string>
 </resources>

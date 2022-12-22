@@ -25,13 +25,13 @@ import java.util.Locale
 
 /** We have to use a custom Application class, because we want to
  * initialize the selected language before SplitCompat#install() has a chance to run. */
-class MyApplication : Application() {
+class App : Application() {
 
     companion object {
 
-        private lateinit var app: MyApplication
+        private lateinit var app: App
 
-        fun getApp(): MyApplication {
+        fun getApp(): App {
             return app
         }
 

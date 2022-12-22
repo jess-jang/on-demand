@@ -1,7 +1,7 @@
 package com.jess.ondemand.facade
 
-import com.jess.ondemand.MyApplication
+import com.jess.ondemand.App
 
 val kotlinFacade by lazy {
-    MyApplication.getApp()
+    App.getApp()
 }

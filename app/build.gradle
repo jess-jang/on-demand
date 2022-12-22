@@ -27,7 +27,7 @@ android {
         applicationId names.applicationId
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 11
+        versionCode 15
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -57,9 +57,9 @@ android {
         targetCompatibility = '1.8'
     }
 
-    dynamicFeatures = [':features:kotlin',
-                       ':features:java',
-                       ':features:assets']
+    dynamicFeatures = [':features:ekyc',
+                       ':features:idcard',
+                       ':features:joint_certificate']
 }
 
 dependencies {
@@ -74,6 +74,8 @@ dependencies {
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
     api 'com.google.android.material:material:1.0.0'
     api "com.google.android.play:core:${versions.playcore}"
+
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.4.0"
 
     androidTestImplementation "androidx.test.espresso:espresso-contrib:${versions.espresso}"
     androidTestImplementation "androidx.test:rules:${versions.testRules}"
